@@ -1,0 +1,178 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="Konferansjer.MainWindow"
+        Title="Konferansjer 2016.04 - 13 Sesja Linuksowa Edition" Height="467.907" Width="835.633">
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="21*"/>
+            <ColumnDefinition Width="129*"/>
+            <ColumnDefinition Width="10*"/>
+        </Grid.ColumnDefinitions>
+        <TabControl Grid.ColumnSpan="3" Margin="0">
+            <TabItem Header="Panel nadawacza" Margin="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="269*"/>
+                        <RowDefinition Height="63*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="200" />
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox x:Name="prelectionView" Margin="0,0,0.2,0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding title}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Grid Margin="0,0,0.2,0" HorizontalAlignment="Right" Width="200" Grid.ColumnSpan="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50*"/>
+                            <RowDefinition Height="50*"/>
+                        </Grid.RowDefinitions>
+                        <Button x:Name="Button_Display_Title" Content="Wyświetl tytuł prelekcji" Click="Button_Display_Title_Click" Margin="0" />
+                        <Button x:Name="Button_Toggle_Slideshow" Content="Włącz/wyłącz pokaz slajdów" Click="Button_Toggle_Slideshow_Click" Margin="0" Grid.Row="1" />
+                    </Grid>
+                    <Grid Margin="0" Grid.Row="1" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80*"/>
+                            <ColumnDefinition Width="80*"/>
+                            <ColumnDefinition Width="80*"/>
+                            <ColumnDefinition Width="80*"/>
+                            <ColumnDefinition Width="80*"/>
+                            <ColumnDefinition Width="80*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Content="Prelegent" Margin="0" Click="Button_Click_1" Background="Red"/>
+                        <Button Content="Widownia" Margin="0" Click="Button_Click_2" Grid.Column="1" Background="Red"/>
+                        <Button Content="Cała sala" Margin="0" Click="Button_Click_3" Grid.Column="2" Background="Red"/>
+                        <Button Content="Widownia + prelegent" Margin="0" Click="Button_Click_4" Grid.Column="3" Background="Red"/>
+                        <Button Content="Prezentacja + prelegent" Margin="0" Click="Button_Click_5" Grid.Column="4" Background="#FF00FF03"/>
+                        <Button Content="Sama prezentacja" Margin="0" Click="Button_Click_6" Grid.Column="5" Background="#FF00FF03"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Edytor" Margin="0,0,0,-2" HorizontalAlignment="Left" Width="47">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid >
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+                        <ListBox x:Name="commandsview"  Grid.ColumnSpan="2" Grid.RowSpan="1" PreviewMouseLeftButtonUp="commandsview_Click" Margin="0">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding title}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Button x:Name="LoadButton" Grid.Row="2" Content="Load" Click="LoadButton_Click" />
+                        <Button x:Name="DeleteButton" Grid.Row="2" Grid.Column="1" Content="Delete" Click="DeleteButton_Click"/>
+
+
+                    </Grid>
+
+                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="16" />
+                            <RowDefinition />
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <Grid Margin="0,0,0.4,0" Grid.RowSpan="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+
+                            </Grid.ColumnDefinitions>
+                            <RadioButton x:Name="DisplayBar" Content="Display Bar"  Grid.Column="0" Checked="RadioButton_Checked" HorizontalAlignment="Center"/>
+                            <RadioButton x:Name="ShowFullScreenBanner" Content="Full Screen Banner" Grid.Column="1" Checked="RadioButton_Checked" HorizontalAlignment="Center"/>
+                            <RadioButton x:Name="ShowFullScreenSlider" Content="Full Screen Slider" Grid.Column="2" Checked="RadioButton_Checked" Margin="0" HorizontalAlignment="Center"/>
+                        </Grid>
+                        <Grid x:Name="Dynamo" Grid.Row="1" Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="30" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                            </Grid.RowDefinitions>
+                            <Label x:Name ="n1" Content="1" Grid.Column="0" Grid.Row="0"/>
+                            <TextBox x:Name="a1" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1"/>
+                            <Label x:Name ="m1" Content="1" Grid.Column="1" Grid.Row="0"/>
+                            <TextBox x:Name="b1" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="1"/>
+                            <Button x:Name="p1" Grid.Column="2" Grid.Row="1" Content="+" Click="addphoto_Click"/>
+
+                            <Label x:Name ="n2" Content="2" Grid.Column="0" Grid.Row="2"/>
+                            <TextBox x:Name="a2" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="3"/>
+                            <Label x:Name ="m2" Content="2" Grid.Column="1" Grid.Row="2"/>
+                            <TextBox x:Name="b2" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="3"/>
+                            <Button x:Name="p2" Grid.Column="2" Grid.Row="3" Content="+" Click="addphoto_Click"/>
+
+                            <Label x:Name ="n3" Content="3" Grid.Column="0" Grid.Row="4"/>
+                            <TextBox x:Name="a3" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="5"/>
+                            <Label x:Name ="m3" Content="3" Grid.Column="1" Grid.Row="4"/>
+                            <TextBox x:Name="b3" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="5"/>
+                            <Button x:Name="p3" Grid.Column="2" Grid.Row="5" Content="+" Click="addphoto_Click"/>
+
+                            <Label x:Name ="n4" Content="4" Grid.Column="0" Grid.Row="6"/>
+                            <TextBox x:Name="a4" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="7"/>
+                            <Label x:Name="m4" Content="3" Grid.Column="1" Grid.Row="6"/>
+                            <TextBox x:Name="b4" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="7"/>
+                            <Button x:Name="p4" Grid.Column="2"  Grid.Row="7" Content="+" Click="addphoto_Click"/>
+
+                            <Label x:Name ="n5" Content="5" Grid.Column="0" Grid.Row="8"/>
+                            <TextBox x:Name="a5" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="9"/>
+                            <Label x:Name ="m5" Content="3" Grid.Column="1" Grid.Row="8"/>
+                            <TextBox x:Name="b5" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="9"/>
+                            <Button x:Name="p5" Grid.Column="2" Content="+" Grid.Row="9" Click="addphoto_Click"/>
+                            <Button x:Name="Button_save_file" Content="Zapisz do pliku" HorizontalAlignment="Center" Margin="0" Grid.Row="10" VerticalAlignment="Center" Width="114" RenderTransformOrigin="0.807,3" Grid.RowSpan="3" Click="SaveFile"/>
+                            <Button x:Name="Button_load_file" Content="Załaduj z pliku" HorizontalAlignment="Center" Margin="0" Grid.Row="10" VerticalAlignment="Center" Width="132" Grid.RowSpan="3" Click="Load_file" Grid.Column="1"/>
+                        </Grid>
+                        <Grid Grid.Row="2" Margin="0,0,0.4,0.4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" x:Name="Save" Content="Save Any Changes" Click="Save_Click"/>
+                            <TextBox x:Name="t1" Grid.Column="1" Text="Title of command"/>
+                            <Button Grid.Column="2" x:Name="Display" Content="Display This One" Click="Display_Click"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

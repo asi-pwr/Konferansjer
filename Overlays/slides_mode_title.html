@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel='stylesheet' href='style.css' type='text/css' media='all' />
+	<script type='text/javascript' src='jquery-2.1.3.min.js'></script>
+
+	<script type='text/javascript'>
+		var lastCommandId = Date.now() / 1000 | 0 //current timestamp
+	
+		/**
+		  * code mostly copypasted from overlays.html,
+		  * TODO: move javascript to it's own file
+		  */
+		  
+		/**
+		 * Note (hack):
+		 * .animate({"null":1}, delay_time) is used instead of .delay(delay_time)
+		 *
+		 * Reason: it's impossible to remove .delay from fx	queue, while
+		 * .animate is removable without problem - because jQuery, that's why.
+		 */
+		 
+		/**
+		 * Display title bar
+		 *
+		 * @param {Object} data - data to show
+		 * @param {string} data.title - Title bar header data
+		 * @param {string} data.author - Title bar 2nd row data
+		 * @param {string} data.photo - URI of image to show
+		 *
+		 * @param {number} showTime - time to display bar
+		 * @param {number} fadeTime - fadeIn/Out animation duration
+		 */
+		function displayBar(data,showTime,fadeTime)
+			{
+			$("#title").text(data.title);
+			$("#author").text(data.author);
+			}
+		
+	
+		
+		/**
+		 * RPC Dispatcher
+		 *
+		 * @param {Object} command - Command to dispatch
+		 * @param {string} command.command - Command name
+		 * @param {string} command.param1 - 1st parameter
+		 * @param {string} command.param2 - 2nd parameter
+		 * @param {string} command.param3 - 3rd parameter
+		 */	
+		 
+		function dispatchCommand(command){
+			switch(command.command){
+				case "displayBar":
+					displayBar(command.param1,command.param2,command.param3);
+					break;
+				default:
+					console.log("dispatchCommand: Unknown function: " + command.command);
+				}
+			}
+			
+		/**
+		 * kind of RPC client
+		 */				
+		function fetchCommand(){
+			$.getJSON("command.json")
+				.done(function(command){
+					if(command.id > lastCommandId){
+						lastCommandId = command.id;
+						dispatchCommand(command);
+						}
+					})
+				.fail(function() {
+					console.log( "fetchCommand failed" );
+					})
+			}
+			
+			
+			
+		$(document).ready(function(){
+			$.ajaxSetup({ cache: false });	//disable json cache
+			//jQuery.fx.interval = 20; //25FPS
+		
+			//$("#titlebar").animate({"null":1}, 2000).fadeOut(1000);	
+		
+			setInterval(function(){fetchCommand()}, 500);		//start RPC fetch loop
+			});
+			
+			
+	</script>
+</head>
+<body>
+<div id="title_grab">
+	<span id="author">&copy; 2015-16 kitor &amp; duobix</span>
+	<span id="title">Konferansjer 2016.04</span>
+</div>
+<div id="fullscreen"></div>
+</body>
+</html>

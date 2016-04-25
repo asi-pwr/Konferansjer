@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel='stylesheet' href='style.css' type='text/css' media='all' />
+	<script type='text/javascript' src='jquery-2.1.3.min.js'></script>
+
+	<script type='text/javascript'>
+		var lastCommandId = Date.now() / 1000 | 0 //current timestamp
+		var logo = new Logo();
+		
+		/**
+		 * Note (hack):
+		 * .animate({"null":1}, delay_time) is used instead of .delay(delay_time)
+		 *
+		 * Reason: it's impossible to remove .delay from fx	queue, while
+		 * .animate is removable without problem - because jQuery, that's why.
+		 */
+		 
+		/**
+		 * Hide title bar
+		 *
+		 * @param {callback} cb - callback after animation ends
+		 */
+		function stopDisplayBar(cb)
+			{		
+			if($("#titlebar").queue().length > 0){		
+				$("#titlebar").stop(true,true).fadeOut(1000,function(){
+					if(typeof cb === "function") cb();	//callback when done
+					});
+				}
+			else{
+				if(typeof cb === "function") cb();	//callback when done
+				}
+			}
+			 
+		/**
+		 * Stop all pending animations
+		 *
+		 * @param {callback} cb - callback after animation ends
+		 */
+		function stopAnimations(cb){
+			stopDisplayBar(function(){
+				stopFullscreen(1000,function(){
+					if(typeof cb === "function") cb();	//callback when done
+					});
+				});
+			}
+			
+		/**
+		 * Display title bar
+		 *
+		 * @param {Object} data - data to show
+		 * @param {string} data.title - Title bar header data
+		 * @param {string} data.author - Title bar 2nd row data
+		 * @param {string} data.photo - URI of image to show
+		 *
+		 * @param {number} showTime - time to display bar
+		 * @param {number} fadeTime - fadeIn/Out animation duration
+		 */
+		function displayBar(data,showTime,fadeTime)
+			{
+			stopAnimations(function(){
+				$("#title").text(data.title);
+				$("#author").text(data.author);
+				$("#photo").attr("src",data.photo);
+				$("#titlebar").fadeIn(fadeTime).animate({"null":1}, showTime).fadeOut(fadeTime);		
+				});
+			}
+		
+		/**
+		 * Display fullscreen banner (single image)
+		 *
+		 * @param {string} file - URI of image to display
+		 * @param {number} showTime - time to display image
+		 * @param {number} fadeTime - fadeIn/Out animation duration
+		 */		
+		function showFullscreenBanner(file,showTime,fadeTime)
+			{
+			stopAnimations(function(){
+				$("#fullscreen").append('<img class="switcher-element" src="' + file + '" />');
+				$("#fullscreen").fadeIn(fadeTime)
+								.animate({"null":1}, showTime,	function(){
+																	logo.reset();
+																	logo.animate();})
+								.fadeOut(fadeTime);
+				});
+			}
+			
+		/**
+		 * Display fullscreen banner loop
+		 *
+		 * @param {Object[]} data - Images data to be shown
+		 * @param {string} data[].file - URI of image to display
+		 * @param {number} data[].showtime - time to display image
+		 *
+		 * @param {number} fadeTime - fadeIn animation duration
+		 */
+		
+		function showFullscreenSlider(data,fadeTime){ 
+			stopAnimations(function(){		
+				$.each(data,function(index,row){
+					//small hack, img alt attribute is used to store element show duration
+					$("#fullscreen").append('<img class="switcher-element" alt="' + row.showtime + '" src="' + row.file + '" />');
+				});
+				
+				slider();
+				
+				$("#fullscreen").fadeIn(fadeTime);	
+				}); 	
+			}
+				
+		/**
+		 * Stop displaying fullscreen banner loop
+		 *
+		 * @param {number} fadeTime - fadeIn/Out animation duration
+		 * @param {callback} cb - callback after animation ends
+		 */
+		function stopFullscreen(fadeTime,cb){
+			if($(".switcher-element").length > 0){
+				$(".switcher-element").clearQueue();
+				$(".switcher-element").stop();
+				logo.reset();
+				$("#fullscreen").fadeOut(fadeTime,function(){
+					$(this).empty();
+					logo.animate();
+					if(typeof cb === "function") cb();	//callback when done
+					});
+				}
+			else{
+				if(typeof cb === "function") cb();	//callback when done
+				}
+			
+			}
+			
+		function slider() {
+			var delay = 0;
+			var total = $(".switcher-element").length;
+			$(".switcher-element").each(function(i){
+				//console.log($(this).attr("alt"));
+				delay = delay + parseInt($(this).attr("alt"));
+				$(this).css( "zIndex", 200 - i )
+				if(i === total -1)
+					{
+					$(this)
+						.animate({"null":1}, delay)
+						.queue(function(){
+							$(this).css( "zIndex", 200  );
+							$(".switcher-element").each(function(){
+								$(this).show();
+								});
+							$(this).dequeue();
+							})
+						.fadeOut("slow")
+						.queue(function(){
+							$(this).css( "zIndex", 200 - total ).show();
+							slider();
+							$(this).dequeue();
+							});
+					}
+				else
+					{
+					$(this).animate({"null":1}, delay).fadeOut("slow");
+					}
+			
+				});
+			} 
+
+		
+		/**
+		 * RPC Dispatcher
+		 *
+		 * @param {Object} command - Command to dispatch
+		 * @param {string} command.command - Command name
+		 * @param {string} command.param1 - 1st parameter
+		 * @param {string} command.param2 - 2nd parameter
+		 * @param {string} command.param3 - 3rd parameter
+		 */	
+		 
+		function dispatchCommand(command){
+			switch(command.command){
+				case "displayBar":
+					displayBar(command.param1,command.param2,command.param3);
+					break;
+				case "showFullscreenBanner":
+					showFullscreenBanner(command.param1,command.param2,command.param3);
+					break;
+				case "showFullscreenSlider":
+					showFullscreenSlider(command.param1,command.param2);
+					break;
+				case "stopFullscreen":
+					stopFullscreen(command.param1);
+					break;
+				default:
+					console.log("dispatchCommand: Unknown function: " + command.command);
+				}
+			}
+			
+		/**
+		 * kind of RPC client
+		 */				
+		function fetchCommand(){
+			$.getJSON("command.json")
+				.done(function(command){
+					if(command.id > lastCommandId){
+						lastCommandId = command.id;
+						dispatchCommand(command);
+						}
+					})
+				.fail(function() {
+					console.log( "fetchCommand failed" );
+					})
+			}
+			
+			
+		function Logo(){
+			this.width = 147;
+			this.showTime = 5000;
+			
+			this.setShowTime = function(time){
+				this.showTime = time;
+				}
+				
+			this.expand = function(){
+				$("#logo_sesja").animate({width: this.width},1000);
+				$("#logo").animate({opacity: 1.0},1000);
+				}
+				
+			this.animate = function(){
+				$("#logo_sesja").animate({"null":1}, this.showTime).animate({width: 0},1000);
+				$("#logo").animate({"null":1}, this.showTime).animate({opacity: 0.75},1000);
+				}
+				
+			this.reset = function(){
+				$("#logo_sesja").clearQueue();
+				$("#logo_sesja").stop();
+				$("#logo").clearQueue();
+				$("#logo").stop();
+				$("#logo_sesja").width(this.width);
+				$("#logo").css({ opacity: 1.0 });
+				}
+			}
+
+			
+		$(document).ready(function(){
+			$.ajaxSetup({ cache: false });	//disable json cache
+			//jQuery.fx.interval = 20; //25FPS
+		
+			$("#titlebar").animate({"null":1}, 2000).fadeOut(1000);	
+			logo.animate();
+		
+			setInterval(function(){fetchCommand()}, 500);		//start RPC fetch loop
+			});
+			
+			
+	</script>
+</head>
+<body>
+<div id="logo">
+	<span id="logo_tux"></span>	
+	<span id="logo_sesja"></span> 
+	<span id="logo_12"></span>
+</div>
+<div id="titlebar">
+	<img id="photo" src="img/logo.png" />
+	<span id="title">Konferansjer 2016.04</span>
+	<span id="author">&copy; 2015-16 kitor &amp; duobix</span>
+</div>
+<div id="fullscreen"></div>
+</body>
+</html>

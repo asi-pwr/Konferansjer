@@ -1,0 +1,142 @@
+body, html{
+	margin:			0;
+	padding:		0;
+	border:			0;
+	font-family:	'Ubuntu';
+	}
+
+/* titlebar in overlays.html */
+#titlebar{
+	position:		absolute;
+	top:			530px;
+	left:			0px;
+	width:			1280px;
+	height:			132px;
+	background:		url('img/bar.png') top left no-repeat;
+	}
+	
+#titlebar.hidden{
+	opacity:		0;
+	}
+	
+#photo{	
+	position:		absolute;
+	width:			122px;
+	height:			auto;
+	left:			40px;
+	top:			3px;
+	clip-path:		circle(61px at center);
+	-webkit-clip-path: circle(61px at center);
+	}
+	
+#titlebar #title{
+	position:		absolute;
+	bottom:			60px;
+	left:			175px;
+	font-size:		30px;
+	letter-spacing:	-0.5pt;
+	background:		rgba(255,255,255,0.9);
+	box-shadow:		0px 0px 5px 3px rgba(255,255,255,0.7);
+	border-radius:	6px;
+	}
+	
+#titlebar #author{
+	position:		absolute;
+	bottom:			39px;
+	left:			195px;
+	font-size:		19px;
+	letter-spacing:	1pt;
+	}
+	
+	
+/* title in slides_mode_title.html */
+#title_grab{
+	position: 		absolute;
+	top: 			280px;
+	left:			0px;
+	width:			320px;
+	height:			300px;
+	padding:		15px;
+	box-sizing:		border-box;
+	}
+	
+	
+#title_grab #author{
+	font-size: 24px;
+	font-weight: bold;
+	display: block;
+	color: #DBA100;
+	}
+	
+#title_grab #title{
+	font-size: 30px;
+	}
+	
+/* fullscreen slideshow in overlays.html */
+#fullscreen{
+	position:		absolute;
+	display:		none;
+	top:			0;
+	left:			0;
+	width:			1280px;
+	height:			720px;
+	z-index:		1000;
+	background:		#FFF;
+	}
+	
+.switcher-element{
+	width: 			auto;
+	height: 		auto;
+	max-width:		100%;
+	max-height: 	100%;
+	display: 		block;
+	position: 		absolute;
+	overflow:		hidden;
+	}
+	
+	
+/* animated logo elements in overlays.html */
+#logo{
+	width:			366px;
+	height:			90px;
+	overflow:		hidden;
+	position:		fixed;
+	top:			75px;
+	right:			80px;
+    transition: 	opacity 1s ease-in-out
+	}
+
+#logo.opaque{
+	opacity:		0.6;
+	}
+	
+#logo_12,
+#logo_sesja,
+#logo_tux{
+	display:		block;
+	height:			61px;
+	float:			right;
+}
+
+#logo_12{
+	width:			52px;
+	background:		url("img_example/logo/13.png") top left no-repeat;
+	background-size: 52px 60px;
+	}
+	
+#logo_sesja{
+	width:			147px;
+	background:		url("img_example/logo/sesja.png") top left no-repeat;
+    //transition:		width 1s;
+	background-size: 147px 60px;
+	}
+
+#logo_sesja.hidden{
+	width:			0px;
+	}
+	
+#logo_tux{
+	width:			45px;
+	background:		url("img_example/logo/tux.png") top left no-repeat;
+	background-size: 45px 60px;
+	} 
